@@ -1,17 +1,21 @@
-var path = require('path')
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
 // Phaser webpack config
-var phaserModule = path.join(__dirname, '/node_modules/phaser/')
-var phaser = path.join(phaserModule, 'src/phaser.js')
+const phaserModule = path.join(__dirname, '/node_modules/phaser/')
+const phaser = path.join(phaserModule, 'src/phaser.js')
 
-var definePlugin = new webpack.DefinePlugin({
+const definePlugin = new webpack.DefinePlugin({
     __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
     WEBGL_RENDERER: true, 
     CANVAS_RENDERER: true 
 })
+
+const workboxPlugin = require('workbox-webpack-plugin');
+const dist = __dirname + '/dist';
+
 
 module.exports = {
     entry: {
@@ -54,6 +58,11 @@ module.exports = {
             server: {
                 baseDir: ['./', './build']
             }
+        }),
+        new workboxPlugin.GenerateSW({
+            globDirectory: dist,
+            globPatterns: ['**/*.{html,js}'],
+            swDest: dist + '/sw.js',
         })
     ],
     module: {

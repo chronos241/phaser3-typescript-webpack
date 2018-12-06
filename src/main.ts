@@ -1,6 +1,9 @@
 import 'phaser';
 
 import TestScene from './scenes/PlayScene';
+import serviceworker from './serviceworker/Initializer';
+
+serviceworker.Initializer.init();
 
 const config:GameConfig = {
     type: Phaser.AUTO,
