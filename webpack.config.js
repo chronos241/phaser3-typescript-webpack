@@ -2,10 +2,12 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 // Phaser webpack config
 const phaserModule = path.join(__dirname, '/node_modules/phaser/')
 const phaser = path.join(phaserModule, 'src/phaser.js')
+const phaserCameraModule = './node_modules/phaser/plugins/camera3d/dist/camera3d.min.js';
 
 const definePlugin = new webpack.DefinePlugin({
     __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
@@ -63,7 +65,16 @@ module.exports = {
             globDirectory: dist,
             globPatterns: ['**/*.{html,js}'],
             swDest: dist + '/sw.js',
-        })
+        }),
+        new CopyWebpackPlugin(
+            [
+              {
+                from: '',
+                to: path.join(dist, 'plugins')
+              },
+            ],
+            { context: phaserCameraModule }
+        )
     ],
     module: {
         rules: [
